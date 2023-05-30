@@ -33,9 +33,7 @@ import { DefaultCatalogDatabase } from './database/DefaultCatalogDatabase';
 import { DefaultProcessingDatabase } from './database/DefaultProcessingDatabase';
 import { ScmIntegrations } from '@backstage/integration';
 import { DefaultCatalogRulesEnforcer } from './ingestion/CatalogRules';
-import { DefaultStitcherEngine } from './stitching/DefaultStitcherEngine';
 import { DefaultStitcher } from './stitching/DefaultStitcher';
-import { Stitcher } from './stitching/types';
 import { DefaultEntitiesCatalog } from './service/DefaultEntitiesCatalog';
 import {
   DefaultCatalogProcessingEngine,
@@ -56,46 +54,12 @@ import { LocationSpec } from '@backstage/plugin-catalog-common';
 import { RefreshStateItem } from './database/types';
 import { DefaultProviderDatabase } from './database/DefaultProviderDatabase';
 import { InputError } from '@backstage/errors';
-import { DbRefreshStateRow } from './database/tables';
 
 const voidLogger = getVoidLogger();
 
 type ProgressTrackerWithErrorReports = ProgressTracker & {
   reportError(unprocessedEntity: Entity, errors: Error[]): void;
 };
-
-class ImmediateStitcher implements Stitcher {
-  constructor(
-    private readonly knex: Knex,
-    private readonly delegate: Stitcher,
-  ) {}
-
-  async markForStitching(options: {
-    entityRefs?: Iterable<string>;
-    entityIds?: Iterable<string>;
-  }) {
-    const entityRefs: string[] = [];
-
-    if (options.entityRefs) {
-      entityRefs.push(...options.entityRefs);
-    }
-
-    if (options.entityIds) {
-      const rows = await this.knex<DbRefreshStateRow>('refresh_state')
-        .select('entity_ref')
-        .whereIn('entity_id', [...options.entityIds]!);
-      entityRefs.push(...rows.map(r => r.entity_ref));
-    }
-
-    for (const entityRef of entityRefs) {
-      await this.delegate.stitchOne({ entityRef });
-    }
-  }
-
-  async stitchOne(options: { entityRef: string; stitchTicket?: string }) {
-    return await this.delegate.stitchOne(options);
-  }
-}
 
 class TestProvider implements EntityProvider {
   #connection?: EntityProviderConnection;
@@ -251,6 +215,11 @@ class TestHarness {
             connection: ':memory:',
           },
         },
+        catalog: {
+          stitchingStrategy: {
+            mode: 'immediate',
+          },
+        },
       },
     );
     const logger = options?.logger ?? getVoidLogger();
@@ -262,12 +231,7 @@ class TestHarness {
 
     await applyDatabaseMigrations(db);
 
-    const stitcher = new ImmediateStitcher(db, new DefaultStitcher(db, logger));
-    const stitcherEngine = new DefaultStitcherEngine({
-      knex: db,
-      logger,
-      stitcher,
-    });
+    const stitcher = DefaultStitcher.fromConfig(config, { knex: db, logger });
 
     const catalogDatabase = new DefaultCatalogDatabase({
       database: db,
@@ -345,11 +309,11 @@ class TestHarness {
       {
         async start() {
           await engine.start();
-          await stitcherEngine.start();
+          await stitcher.start();
         },
         async stop() {
           await engine.stop();
-          await stitcherEngine.stop();
+          await stitcher.stop();
         },
       },
       refresh,

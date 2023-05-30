@@ -65,7 +65,6 @@ import { DefaultCatalogProcessingEngine } from '../processing/DefaultCatalogProc
 import { DefaultLocationService } from './DefaultLocationService';
 import { DefaultEntitiesCatalog } from './DefaultEntitiesCatalog';
 import { DefaultCatalogProcessingOrchestrator } from '../processing/DefaultCatalogProcessingOrchestrator';
-import { DefaultStitcherEngine } from '../stitching/DefaultStitcherEngine';
 import { DefaultStitcher } from '../stitching/DefaultStitcher';
 import {
   createRandomProcessingInterval,
@@ -439,10 +438,8 @@ export class CatalogBuilder {
       await applyDatabaseMigrations(dbClient);
     }
 
-    const stitcher = new DefaultStitcher(dbClient, logger);
-    const stitcherEngine = new DefaultStitcherEngine({
+    const stitcher = DefaultStitcher.fromConfig(config, {
       knex: dbClient,
-      stitcher,
       logger,
     });
 
@@ -570,11 +567,11 @@ export class CatalogBuilder {
       processingEngine: {
         async start() {
           await processingEngine.start();
-          await stitcherEngine.start();
+          await stitcher.start();
         },
         async stop() {
           await processingEngine.stop();
-          await stitcherEngine.stop();
+          await stitcher.stop();
         },
       },
       router,
