@@ -527,6 +527,7 @@ export class CatalogBuilder {
       config,
       scheduler,
       logger,
+      knex: dbClient,
       processingDatabase,
       orchestrator,
       stitcher,
