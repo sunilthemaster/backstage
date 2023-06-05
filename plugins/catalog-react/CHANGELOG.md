@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-react
 
+## 1.7.0-next.2
+
+### Patch Changes
+
+- d68692aee97e: Make `useRelatedEntities` use `getEntitiesByRefs` under the hood
+
 ## 1.7.0-next.1
 
 ### Patch Changes

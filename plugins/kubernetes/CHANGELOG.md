@@ -1,5 +1,13 @@
 # @backstage/plugin-kubernetes
 
+## 0.9.2-next.2
+
+### Patch Changes
+
+- 73cc0deee48a: Add proposed fix dialog for pod errors
+- Updated dependencies
+  - @backstage/plugin-catalog-react@1.7.0-next.2
+
 ## 0.9.2-next.1
 
 ### Patch Changes

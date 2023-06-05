@@ -1,5 +1,11 @@
 # @backstage/plugin-code-coverage-backend
 
+## 0.2.12-next.2
+
+### Patch Changes
+
+- a83cb4e5624e: Updated dependency `xml2js` to `^0.6.0`.
+
 ## 0.2.12-next.1
 
 ### Patch Changes

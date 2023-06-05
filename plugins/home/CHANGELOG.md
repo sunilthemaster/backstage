@@ -1,5 +1,14 @@
 # @backstage/plugin-home
 
+## 0.5.3-next.2
+
+### Patch Changes
+
+- 2ff94da135a4: bump `rjsf` dependencies to 5.7.3
+- Updated dependencies
+  - @backstage/plugin-catalog-react@1.7.0-next.2
+  - @backstage/plugin-home-react@0.1.0-next.2
+
 ## 0.5.3-next.1
 
 ### Patch Changes

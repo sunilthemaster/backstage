@@ -1,5 +1,12 @@
 # @backstage/plugin-catalog-backend-module-gitlab
 
+## 0.2.2-next.2
+
+### Patch Changes
+
+- f31fd1f8fd98: Fixed bug that caused ingestion errors when a user's name or profile picture is undefined.
+- 66261b4ab441: Added option to skip forked repos
+
 ## 0.2.2-next.1
 
 ### Patch Changes
