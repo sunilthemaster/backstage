@@ -9,7 +9,6 @@ metadata:
   annotations:
     # The annotation is deprecated, we use placeholders (see below) instead, remove it later.
     backstage.io/definition-at-location: 'url:https://raw.githubusercontent.com/eswari795/openapi-directory/main/APIs/spotify.com/1.0.0/openapi.yaml'
-    backstage.io/definition-at-location: 'url:https://raw.githubusercontent.com/eswari795/openapi-directory/main/APIs/spotify.com/sonallux/2023.2.27/openapi.yaml"
 spec:
   type: openapi
   lifecycle: production
