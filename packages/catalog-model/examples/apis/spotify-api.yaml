@@ -3,6 +3,7 @@ kind: API
 metadata:
   name: spotify1
   description: The Spotify web API
+  namespace: v2
   tags:
     - spotify
     - rest
@@ -22,6 +23,7 @@ kind: API
 metadata:
   name: spotify1
   description: The Spotify web API
+  namespace: v1
   tags:
     - spotify
     - rest
